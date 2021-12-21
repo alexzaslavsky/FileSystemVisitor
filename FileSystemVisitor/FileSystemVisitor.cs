@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 namespace FileSystemVisitor
 {
@@ -16,7 +17,6 @@ namespace FileSystemVisitor
 
         #region Private Fields
 
-        private List<FileSystemInfo> _files;
         private readonly string _startPath;
         private readonly Func<FileSystemInfo, bool> _filter;
 
@@ -37,13 +37,11 @@ namespace FileSystemVisitor
 
         public FileSystemVisitor(string path)
         {
-            _files = new List<FileSystemInfo>();
             _startPath = path;
         }
 
         public FileSystemVisitor(string path, Func<FileSystemInfo, bool> filter)
         {
-            _files = new List<FileSystemInfo>();
             _startPath = path;
             _filter = filter;
         }
@@ -146,7 +144,7 @@ namespace FileSystemVisitor
             var filteredNamePart = _filter == null ? string.Empty : "Filtered";
             var handler = GetType().GetMethod(
                 $"On{filteredNamePart}{typeNamePart}Finded",
-                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                BindingFlags.Instance | BindingFlags.NonPublic);
 
             handler.Invoke(this, new[]
                 {
